@@ -11,5 +11,6 @@ export default defineConfig({
 	sourcemap: true,
 	clean: true,
 	dts: true,
-	external: ['react', 'react-dom', 'tinymce']
+	external: ['react', 'react-dom'],
+	noExternal: ['tinymce']
 });
