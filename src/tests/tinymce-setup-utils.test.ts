@@ -106,7 +106,9 @@ describe('tinymce-setup-utils', () => {
 
 			// Get the fetch function that was passed to addMenuButton
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 			const fetchFunction = menuButtonConfig.fetch;
 
 			// Mock the callback function
@@ -138,7 +140,9 @@ describe('tinymce-setup-utils', () => {
 
 			// Get the fetch function
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 			const fetchFunction = menuButtonConfig.fetch;
 
 			// Mock the callback function
@@ -148,8 +152,11 @@ describe('tinymce-setup-utils', () => {
 			fetchFunction(mockCallback);
 
 			// Get the menu items that were passed to the callback
-			const menuItems: Ui.Menu.MenuItemSpec[] = mockCallback.mock.calls[0][0];
+			const callArgs = mockCallback.mock.calls[0];
+			assert(callArgs !== undefined);
+			const menuItems: Ui.Menu.MenuItemSpec[] = callArgs[0];
 			const firstMenuItem = menuItems[0];
+			assert(firstMenuItem !== undefined);
 
 			// Trigger the onAction of the first menu item
 			if (firstMenuItem.type === 'menuitem' && firstMenuItem.onAction) {
@@ -158,7 +165,7 @@ describe('tinymce-setup-utils', () => {
 						return false;
 					},
 					// eslint-disable-next-line unused-imports/no-unused-vars,@typescript-eslint/no-empty-function
-					setEnabled(state: boolean): void {}
+					setEnabled(_state: boolean): void {}
 				});
 			}
 
@@ -178,7 +185,9 @@ describe('tinymce-setup-utils', () => {
 			setup(mockEditor as Editor);
 
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 
 			expect(menuButtonConfig.icon).toBe('gallery');
 		});
@@ -196,7 +205,9 @@ describe('tinymce-setup-utils', () => {
 			setup(mockEditor as Editor);
 
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 
 			expect(menuButtonConfig.tooltip).toBe(customTooltip);
 		});
@@ -215,14 +226,19 @@ describe('tinymce-setup-utils', () => {
 
 			// Get the fetch function and call it
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 			const fetchFunction = menuButtonConfig.fetch;
 			const mockCallback = vi.fn();
 			fetchFunction(mockCallback);
 
 			// Check the menu item text
-			const menuItems: Ui.Menu.MenuItemSpec[] = mockCallback.mock.calls[0][0];
+			const callArgs = mockCallback.mock.calls[0];
+			assert(callArgs !== undefined);
+			const menuItems: Ui.Menu.MenuItemSpec[] = callArgs[0];
 			const firstMenuItem = menuItems[0];
+			assert(firstMenuItem !== undefined);
 
 			expect(firstMenuItem.text).toBe(customLabel);
 		});
@@ -254,14 +270,20 @@ describe('tinymce-setup-utils', () => {
 			setup(mockEditor as Editor);
 
 			const addMenuButtonCall = mockAddMenuButton.mock.calls[0];
+			assert(addMenuButtonCall !== undefined);
 			const menuButtonConfig = addMenuButtonCall[1];
+			assert(menuButtonConfig !== undefined);
 			const fetchFunction = menuButtonConfig.fetch;
 			const mockCallback = vi.fn();
 			fetchFunction(mockCallback);
 
-			const menuItems: Ui.Menu.MenuItemSpec[] = mockCallback.mock.calls[0][0];
+			const callArgs = mockCallback.mock.calls[0];
+			assert(callArgs !== undefined);
+			const menuItems: Ui.Menu.MenuItemSpec[] = callArgs[0];
 			expect(menuItems).toHaveLength(1);
-			expect(menuItems[0].type).toBe('menuitem');
+			const firstMenuItem = menuItems[0];
+			assert(firstMenuItem !== undefined);
+			expect(firstMenuItem.type).toBe('menuitem');
 		});
 	});
 });
