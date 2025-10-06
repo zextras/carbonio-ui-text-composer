@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	plugins: [react()],
 	test: {
 		globals: true,
 		environment: 'jsdom',
-		setupFiles: './vitest.setup.ts',
+		setupFiles: './vitest.setup.tsx',
 		include: ['src/**/*.test.ts?(x)']
 	}
 });
