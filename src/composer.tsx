@@ -5,7 +5,6 @@
  */
 import React, { useCallback, useMemo, useRef } from 'react';
 
-import styled from '@emotion/styled';
 import type { IAllProps as EditorProps } from '@tinymce/tinymce-react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Container } from '@zextras/carbonio-design-system';
@@ -64,10 +63,6 @@ type ComposerProps = Omit<EditorProps, 'onEditorChange'> & {
 	/** Whether the editor should be disabled */
 	disabled?: boolean;
 };
-
-export const FileInput = styled.input`
-	display: none;
-`;
 
 export const Composer = ({
 	onEditorChange,
@@ -159,13 +154,14 @@ export const Composer = ({
 			mainAlignment="flex-start"
 			style={{ overflowY: 'hidden' }}
 		>
-			<FileInput
+			<input
 				data-testid="file-input"
 				type="file"
 				ref={inputRef}
 				accept="image/*"
 				onChange={fileInputOnChange}
 				multiple
+				style={{ display: 'none' }}
 			/>
 
 			<Editor
