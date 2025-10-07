@@ -8,3 +8,9 @@ path = [".idea/**", ".vscode/**", ".husky/**", ".nvmrc", "package.json", "packag
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 Zextras <https://www.zextras.com>"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/assets/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Zextras <https://www.zextras.com>"
+SPDX-License-Identifier = "CC0-1.0"
