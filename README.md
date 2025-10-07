@@ -246,13 +246,25 @@ npm test
 
 ### Building
 
-The library is built using tsup and outputs:
+The library is built using tsdown and outputs:
 - ESM module (`dist/index.mjs`)
-- CommonJS module (`dist/index.cjs`)
-- TypeScript definitions (`dist/index.d.ts`)
+- CommonJS module (`dist/index.js`)
+- TypeScript definitions (`dist/index.d.ts` and `dist/index.d.mts`)
+- Source maps for debugging
+- TinyMCE assets copied to `dist/assets/`
 
 ```bash
 npm run build
+```
+
+You can also build JavaScript and types separately:
+
+```bash
+# Build only JavaScript (no type definitions)
+npm run build:js
+
+# Build only type definitions
+npm run build:types
 ```
 
 ## License
@@ -285,4 +297,3 @@ Zextras Dev Team - [https://www.zextras.com/carbonio/](https://www.zextras.com/c
 ---
 
 **Copyright © 2025 Zextras**
-
