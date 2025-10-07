@@ -84,9 +84,7 @@ describe('tinymce-config-utils', () => {
 			const result = createTinyMCEConfig(options);
 
 			expect(result.content_css).toEqual(['']);
-			expect(result.language_url).toBe(
-				'/node_modules/@zextras/carbonio-ui-text-composer/dist/assets/tinymce/langs/de.js'
-			);
+			expect(result.language_url).toBe('tinymce/langs/de.js');
 		});
 
 		it('should merge custom options correctly', () => {

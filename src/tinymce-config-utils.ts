@@ -7,13 +7,6 @@
 import type { EditorOptions } from 'tinymce/tinymce';
 
 /**
- * Base path for TinyMCE assets
- * When using the library, consumers should configure their bundler to copy these assets
- * from node_modules/@zextras/carbonio-ui-text-composer/dist/assets to their public folder
- */
-const BASE_PATH = '/node_modules/@zextras/carbonio-ui-text-composer/dist/assets/';
-
-/**
  * Default font size formats for TinyMCE editor
  */
 export const DEFAULT_FONT_SIZE_FORMATS =
@@ -138,9 +131,8 @@ export function createTinyMCEConfig(options: {
 	const quickBarsConfig = generateQuickBarsConfig(inline);
 
 	return {
-		base_url: `${BASE_PATH}`,
 		content_css: [''],
-		language_url: `${BASE_PATH}tinymce/langs/${language}.js`,
+		language_url: `tinymce/langs/${language}.js`,
 		language,
 		setup,
 		min_height: 350,
