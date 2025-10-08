@@ -53,7 +53,6 @@ export default defineConfig({
 				'react-dom',
 				'react/jsx-runtime',
 				'@zextras/carbonio-design-system',
-				'@zextras/carbonio-ui-soap-lib',
 				'react-i18next',
 				'@emotion/styled',
 				'@emotion/react',

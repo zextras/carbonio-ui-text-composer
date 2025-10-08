@@ -4,12 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { type AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
-
 export interface EditorStyle {
 	font?: string;
 	fontSize?: string;
 	color?: string;
+}
+
+type AccountSettingsPrefs = {
+	zimbraPrefHtmlEditorDefaultFontColor?: string;
+	zimbraPrefHtmlEditorDefaultFontFamily?: string;
+	zimbraPrefHtmlEditorDefaultFontSize?: string;
 }
 
 /**

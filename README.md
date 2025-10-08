@@ -30,7 +30,6 @@ This package requires the following peer dependencies:
 ```json
 {
   "@zextras/carbonio-design-system": "^11.0.0",
-  "@zextras/carbonio-ui-soap-lib": "^1.0.0",
   "react": "^18.3.1",
   "react-dom": "^18.3.1",
   "react-i18next": "^12.0.0"
