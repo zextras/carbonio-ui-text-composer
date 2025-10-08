@@ -18,7 +18,7 @@ export default defineConfig({
 		}),
 		{
 			name: 'copy-tinymce-assets',
-			closeBundle: async () => {
+			closeBundle: async (): Promise<void> => {
 				// Copy TinyMCE assets to dist folder
 				const assetsSource = path.join(process.cwd(), 'src/assets');
 				const assetsTarget = path.join(process.cwd(), 'dist/assets');
