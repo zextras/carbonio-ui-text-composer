@@ -28,12 +28,13 @@ export default defineConfig({
 			}
 		}),
 		dts({
-			include: ['src/**/*.ts', 'src/**/*.tsx'],
+			include: ['src/index.ts', 'src/composer.tsx'],
 			exclude: ['src/**/*.test.*', 'src/tests/**/*'],
 			copyDtsFiles: false,
 			strictOutput: true,
 			logLevel: 'error',
-			insertTypesEntry: true // Ensures proper type entry for consumers
+			insertTypesEntry: true,
+			rollupTypes: true // Bundle all types into a single declaration file
 		}),
 		{
 			name: 'copy-tinymce-assets',
