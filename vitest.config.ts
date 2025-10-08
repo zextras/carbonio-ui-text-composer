@@ -26,7 +26,7 @@ export default defineConfig({
 		},
 
 		coverage: {
-			enabled: false, // Enable via --coverage flag
+			enabled: true, // should be disabled but the CI expect coverage/lcov.info to be there
 			provider: 'v8',
 			reportsDirectory: './coverage',
 			reporter: ['lcov', 'html'],
