@@ -5,5 +5,3 @@
  */
 
 export { Composer } from './composer';
-
-
