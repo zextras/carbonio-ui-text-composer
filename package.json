@@ -93,7 +93,7 @@
 		"vitest": "^3.2.4"
 	},
 	"peerDependencies": {
-		"@zextras/carbonio-design-system": "^11.0.0",
+		"@zextras/carbonio-design-system": "^11.0.0-devel.1",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-i18next": "^12.0.0"
