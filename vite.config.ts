@@ -34,7 +34,10 @@ export default defineConfig({
 			strictOutput: true,
 			logLevel: 'error',
 			insertTypesEntry: true,
-			rollupTypes: true // Bundle all types into a single declaration file
+			rollupTypes: false,
+			compilerOptions: {
+				declarationMap: true
+			}
 		}),
 		{
 			name: 'copy-tinymce-assets',
