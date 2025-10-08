@@ -23,4 +23,4 @@ README.md
 *.toml
 *.properties
 src/assets/*
-
+Jenkinsfile
