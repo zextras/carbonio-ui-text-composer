@@ -12,8 +12,46 @@ export default defineConfig({
 		globals: true,
 		environment: 'jsdom',
 		setupFiles: './vitest.setup.tsx',
-		include: ['src/**/*.test.ts?(x)'],
-		reporters: ['junit'],
-		outputFile: 'junit.xml'
+		include: ['src/**/*.test.{ts,tsx}'],
+		exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
+		reporters: process.env.CI ? ['junit', 'default'] : ['default'],
+		outputFile: {
+			junit: './junit.xml'
+		},
+		pool: 'forks',
+		poolOptions: {
+			forks: {
+				singleFork: false
+			}
+		},
+
+		coverage: {
+			enabled: false, // Enable via --coverage flag
+			provider: 'v8',
+			reportsDirectory: './coverage',
+			reporter: ['text', 'lcov', 'html', 'json-summary'],
+			include: ['src/**/*.{ts,tsx}'],
+			exclude: [
+				'src/**/*.test.{ts,tsx}',
+				'src/tests/**',
+				'vitest.setup.tsx',
+				'src/assets/**',
+				'src/**/*.d.ts'
+			],
+
+			thresholds: {
+				lines: 80,
+				functions: 80,
+				branches: 75,
+				statements: 80
+			},
+			all: true,
+			clean: true
+		},
+
+		css: false,
+		mockReset: true,
+		restoreMocks: true,
+		clearMocks: true
 	}
 });
