@@ -29,7 +29,7 @@ export default defineConfig({
 			enabled: false, // Enable via --coverage flag
 			provider: 'v8',
 			reportsDirectory: './coverage',
-			reporter: ['text', 'lcov', 'html', 'json-summary'],
+			reporter: ['lcov', 'html'],
 			include: ['src/**/*.{ts,tsx}'],
 			exclude: [
 				'src/**/*.test.{ts,tsx}',
