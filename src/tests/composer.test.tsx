@@ -39,14 +39,6 @@ vi.mock('@tinymce/tinymce-react', () => ({
 	})
 }));
 
-vi.mock('@zextras/carbonio-shell-ui', () => ({
-	useUserSettings: (): { prefs: { zimbraPrefLocale: string } } => ({
-		prefs: {
-			zimbraPrefLocale: 'en'
-		}
-	})
-}));
-
 describe('Composer', () => {
 	const TINYMCE_EDITOR_TESTID = 'tinymce-editor';
 	const FILE_INPUT_TESTID = 'file-input';

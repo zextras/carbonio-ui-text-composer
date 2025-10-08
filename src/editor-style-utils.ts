@@ -10,11 +10,12 @@ export interface EditorStyle {
 	color?: string;
 }
 
-type AccountSettingsPrefs = {
+export type AccountSettingsPrefs = {
+	zimbraPrefLocale?: string;
 	zimbraPrefHtmlEditorDefaultFontColor?: string;
 	zimbraPrefHtmlEditorDefaultFontFamily?: string;
 	zimbraPrefHtmlEditorDefaultFontSize?: string;
-}
+};
 
 /**
  * Creates default style configuration for the TinyMCE editor based on user preferences

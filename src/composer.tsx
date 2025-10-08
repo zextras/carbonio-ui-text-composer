@@ -40,7 +40,11 @@ import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/visualblocks';
 import 'tinymce/plugins/wordcount';
-import { createEditorDefaultStyle, generateEditorContentStyle } from './editor-style-utils';
+import {
+	AccountSettingsPrefs,
+	createEditorDefaultStyle,
+	generateEditorContentStyle
+} from './editor-style-utils';
 import { calculateTinyMCELanguage } from './locale-utils';
 import { createTinyMCEConfig } from './tinymce-config-utils';
 import { createTinyMCESetup } from './tinymce-setup-utils';
@@ -62,6 +66,8 @@ type ComposerProps = Omit<EditorProps, 'onEditorChange'> & {
 	customInitOptions?: Partial<Omit<EditorOptions, 'selector' | 'target'>>;
 	/** Whether the editor should be disabled */
 	disabled?: boolean;
+	/** UserPreferences */
+	accountSettingsPrefs?: AccountSettingsPrefs;
 };
 
 export const Composer = ({
@@ -72,6 +78,12 @@ export const Composer = ({
 	initialValue,
 	customInitOptions,
 	disabled,
+	accountSettingsPrefs = {
+		zimbraPrefLocale: 'en',
+		zimbraPrefHtmlEditorDefaultFontFamily: 'Arial',
+		zimbraPrefHtmlEditorDefaultFontSize: '12pt',
+		zimbraPrefHtmlEditorDefaultFontColor: '#000000'
+	},
 	...rest
 }: ComposerProps): React.JSX.Element => {
 	const isControlledMode = useMemo(() => !!onEditorChange, [onEditorChange]);
@@ -86,18 +98,10 @@ export const Composer = ({
 		[onEditorChange]
 	);
 
-	// TODO: pass it as prop of the wrapper, this is to decouple from carbonio-shell-ui
-	const { prefs } = {
-		prefs: {
-			zimbraPrefLocale: 'en',
-			zimbraPrefHtmlEditorDefaultFontFamily: 'Arial',
-			zimbraPrefHtmlEditorDefaultFontSize: '12pt',
-			zimbraPrefHtmlEditorDefaultFontColor: '#000000'
-		}
-	};
-
-	// useUserSettings();
-	const defaultStyle = useMemo(() => createEditorDefaultStyle(prefs), [prefs]);
+	const defaultStyle = useMemo(
+		() => createEditorDefaultStyle(accountSettingsPrefs),
+		[accountSettingsPrefs]
+	);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const onFileClick = useCallback(() => {
 		if (inputRef.current) {
@@ -108,8 +112,8 @@ export const Composer = ({
 	const [t] = useTranslation();
 
 	const language = useMemo(
-		() => calculateTinyMCELanguage(prefs.zimbraPrefLocale),
-		[prefs.zimbraPrefLocale]
+		() => calculateTinyMCELanguage(accountSettingsPrefs.zimbraPrefLocale),
+		[accountSettingsPrefs.zimbraPrefLocale]
 	);
 
 	const inlineLabel = useMemo(() => t('label.add_inline_image', 'Add inline image'), [t]);
