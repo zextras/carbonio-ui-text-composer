@@ -10,6 +10,7 @@
 /.husky/
 /.git/
 /.github/
+src/assets/*
 .gitignore
 .env
 .DS_Store
@@ -21,6 +22,4 @@ THIRDPARTIES
 README.md
 .prettierignore
 *.toml
-*.properties
-src/assets/*
 Jenkinsfile
