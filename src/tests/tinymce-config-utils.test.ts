@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
 	generateToolbarConfig,
@@ -53,10 +53,6 @@ describe('tinymce-config-utils', () => {
 		beforeEach(() => {
 			vi.clearAllMocks();
 			vi.stubGlobal('BASE_PATH', '/test-base-path/');
-		});
-
-		afterEach(() => {
-			vi.unstubAllGlobals();
 		});
 
 		it('should create config with all required properties', () => {
