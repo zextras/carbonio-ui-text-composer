@@ -115,6 +115,8 @@ export function generateQuickBarsConfig(inline: boolean): {
 	};
 }
 
+declare const BASE_PATH: string;
+
 /**
  * Creates the base TinyMCE editor configuration
  * @param options - Configuration options
@@ -132,7 +134,7 @@ export function createTinyMCEConfig(options: {
 
 	return {
 		content_css: [''],
-		language_url: `tinymce/langs/${language}.js`,
+		language_url: `${BASE_PATH}tinymce/langs/${language}.js`,
 		language,
 		setup,
 		min_height: 350,
