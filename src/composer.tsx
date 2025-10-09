@@ -10,7 +10,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Container } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import type { EditorOptions, TinyMCE } from 'tinymce/tinymce';
-import tinymce from 'tinymce/tinymce';
+
+import 'tinymce/tinymce';
 
 import 'tinymce/models/dom';
 // Theme
@@ -48,6 +49,13 @@ import {
 import { calculateTinyMCELanguage } from './locale-utils';
 import { createTinyMCEConfig } from './tinymce-config-utils';
 import { createTinyMCESetup } from './tinymce-setup-utils';
+
+declare global {
+	// noinspection JSUnusedGlobalSymbols
+	interface Window {
+		tinymce: TinyMCE;
+	}
+}
 
 type ComposerProps = Omit<EditorProps, 'onEditorChange'> & {
 	/** The callback invoked when an edit is performed into the editor. `([text, html]) => {}` */
@@ -99,6 +107,7 @@ export const Composer = ({
 	);
 
 	const inputRef = useRef<HTMLInputElement>(null);
+	const editorRef = useRef<TinyMCE | null>(null);
 	const onFileClick = useCallback(() => {
 		if (inputRef.current) {
 			inputRef.current.value = '';
@@ -144,10 +153,18 @@ export const Composer = ({
 	);
 
 	const fileInputOnChange = useCallback(() => {
-		if (onFileSelect && inputRef.current) {
-			onFileSelect({ editor: tinymce, files: inputRef.current.files });
+		if (onFileSelect && inputRef.current && editorRef.current) {
+			onFileSelect({ editor: editorRef.current, files: inputRef.current.files });
 		}
 	}, [onFileSelect]);
+
+	const onInit = useCallback<NonNullable<EditorProps['onInit']>>(
+		(_evt, editor) => {
+			editorRef.current = window.tinymce;
+			rest.onInit?.(_evt, editor);
+		},
+		[rest]
+	);
 
 	return (
 		<Container
@@ -171,6 +188,7 @@ export const Composer = ({
 				value={value}
 				init={editorInitConfig}
 				onEditorChange={isControlledMode ? _onEditorChange : undefined}
+				onInit={onInit}
 				disabled={disabled}
 				{...rest}
 			/>
