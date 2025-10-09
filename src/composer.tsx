@@ -98,10 +98,6 @@ export const Composer = ({
 		[onEditorChange]
 	);
 
-	const defaultStyle = useMemo(
-		() => createEditorDefaultStyle(accountSettingsPrefs),
-		[accountSettingsPrefs]
-	);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const onFileClick = useCallback(() => {
 		if (inputRef.current) {
@@ -130,7 +126,10 @@ export const Composer = ({
 		[inlineLabel, onFileClick, onFileSelect, selectImageTooltip]
 	);
 
-	const contentStyle = useMemo(() => generateEditorContentStyle(defaultStyle), [defaultStyle]);
+	const contentStyle = useMemo(() => {
+		const defaultStyle = createEditorDefaultStyle(accountSettingsPrefs);
+		return generateEditorContentStyle(defaultStyle);
+	}, [accountSettingsPrefs]);
 
 	const editorInitConfig = useMemo(
 		() =>
@@ -146,7 +145,6 @@ export const Composer = ({
 
 	const fileInputOnChange = useCallback(() => {
 		if (onFileSelect && inputRef.current) {
-			// eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
 			onFileSelect({ editor: tinymce, files: inputRef.current.files });
 		}
 	}, [onFileSelect]);
