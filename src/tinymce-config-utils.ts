@@ -85,16 +85,18 @@ export function generateToolbarConfig(inline: boolean): string | false {
 	}
 
 	return [
-		'fontfamily fontsize styles visualblocks',
-		'bold italic underline strikethrough',
-		'removeformat code',
-		'alignleft aligncenter alignright alignjustify',
-		'forecolor backcolor',
+		// Font and style controls
+		'fontfamily fontsize styles forecolor backcolor',
+		// Text formatting
+		'bold italic underline strikethrough removeformat',
+		// Alignment and direction
+		'alignleft aligncenter alignright alignjustify ltr rtl',
+		// Lists and indentation
 		'bullist numlist outdent indent',
-		'ltr rtl',
-		'link',
-		'insertfile image',
-		'imageSelector'
+		// Insert elements
+		'link table insertfile image imageSelector',
+		// View and blocks
+		'visualblocks code'
 	].join(' | ');
 }
 
