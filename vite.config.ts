@@ -52,6 +52,9 @@ export default defineConfig({
 				const tinymcePluginsSrc = path.join(root, 'node_modules/tinymce/plugins');
 				const tinymcePluginsDest = path.join(distAssets, 'plugins');
 				await safeCopy(tinymcePluginsSrc, tinymcePluginsDest);
+				const tinymceSkinsSrc = path.join(root, 'node_modules/tinymce/skins');
+				const tinymceSkinsDest = path.join(distAssets, 'skins');
+				await safeCopy(tinymceSkinsSrc, tinymceSkinsDest);
 				console.log('✅ Assets copy completed');
 			}
 		}
