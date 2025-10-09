@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
 	generateToolbarConfig,
@@ -52,6 +52,11 @@ describe('tinymce-config-utils', () => {
 
 		beforeEach(() => {
 			vi.clearAllMocks();
+			vi.stubGlobal('BASE_PATH', '/test-base-path/');
+		});
+
+		afterEach(() => {
+			vi.unstubAllGlobals();
 		});
 
 		it('should create config with all required properties', () => {
@@ -84,7 +89,7 @@ describe('tinymce-config-utils', () => {
 			const result = createTinyMCEConfig(options);
 
 			expect(result.content_css).toEqual(['']);
-			expect(result.language_url).toBe('tinymce/langs/de.js');
+			expect(result.language_url).toBe('/test-base-path/tinymce/langs/de.js');
 		});
 
 		it('should merge custom options correctly', () => {
