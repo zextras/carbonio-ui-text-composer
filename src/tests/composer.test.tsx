@@ -6,13 +6,13 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { setupTest } from '../../vitest.setup';
 import { Composer } from '../composer';
 
 vi.mock('@tinymce/tinymce-react', () => ({
-	Editor: vi.fn(({ onEditorChange, disabled, ...props }) => {
+	Editor: vi.fn(({ onEditorChange, disabled, onInit, ...props }) => {
 		const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
 			if (onEditorChange) {
 				const mockEditor = {
@@ -26,6 +26,14 @@ vi.mock('@tinymce/tinymce-react', () => ({
 				onEditorChange(event.target.value, mockEditor);
 			}
 		};
+
+		// Trigger onInit to simulate editor initialization
+		React.useEffect(() => {
+			if (onInit) {
+				const mockEditor = {};
+				onInit({}, mockEditor);
+			}
+		}, [onInit]);
 
 		return (
 			<textarea
@@ -45,6 +53,12 @@ describe('Composer', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+		vi.stubGlobal('BASE_PATH', '/test-base-path/');
+		vi.stubGlobal('tinymce', {});
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
 	});
 
 	it('renders without crashing', () => {

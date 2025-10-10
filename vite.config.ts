@@ -4,39 +4,58 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import react from '@vitejs/plugin-react';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
+// Utility for safe copy
+async function safeCopy(src: string, dest: string): Promise<void> {
+	if (!fs.existsSync(src)) return;
+	await fs.promises.mkdir(path.dirname(dest), { recursive: true });
+	await fs.promises.cp(src, dest, { recursive: true, force: true });
+}
+
 export default defineConfig({
 	plugins: [
-		react(),
+		react({
+			jsxRuntime: 'automatic',
+			babel: {
+				plugins: [
+					// Reduce runtime overhead (removes propTypes & debug traces)
+					['transform-react-remove-prop-types', { removeImport: true }]
+				]
+			}
+		}),
 		dts({
-			include: ['src/**/*.ts', 'src/**/*.tsx'],
-			exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/tests/**/*']
+			include: ['src/index.ts', 'src/composer.tsx'],
+			exclude: ['src/**/*.test.*', 'src/tests/**/*'],
+			copyDtsFiles: false,
+			strictOutput: true,
+			logLevel: 'error',
+			insertTypesEntry: true,
+			rollupTypes: false,
+			compilerOptions: {
+				declarationMap: true
+			}
 		}),
 		{
 			name: 'copy-tinymce-assets',
-			closeBundle: async () => {
-				// Copy TinyMCE assets to dist folder
-				const assetsSource = path.join(process.cwd(), 'src/assets');
-				const assetsTarget = path.join(process.cwd(), 'dist/assets');
+			closeBundle: async (): Promise<void> => {
+				const root = process.cwd();
+				const srcAssets = path.join(root, 'src/assets');
+				const distAssets = path.join(root, 'dist/assets');
 
-				// Copy node_modules/tinymce/plugins/ to dist/assets/plugins
-				const tinymcePluginsSource = path.join(process.cwd(), 'node_modules', 'tinymce', 'plugins');
-				const tinymcePluginsTarget = path.join(assetsTarget, 'plugins');
-				if (fs.existsSync(tinymcePluginsSource)) {
-					console.log('📦 Copying TinyMCE plugins to dist/assets/plugins...');
-					await fs.promises.cp(tinymcePluginsSource, tinymcePluginsTarget, { recursive: true });
-					console.log('✅ Plugins copied successfully');
-				}
+				console.log('📦 Copying TinyMCE assets...');
+				await safeCopy(srcAssets, distAssets);
 
-				if (fs.existsSync(assetsSource)) {
-					console.log('📦 Copying TinyMCE assets to dist/assets...');
-					await fs.promises.cp(assetsSource, assetsTarget, { recursive: true });
-					console.log('✅ Assets copied successfully');
-				}
+				const tinymcePluginsSrc = path.join(root, 'node_modules/tinymce/plugins');
+				const tinymcePluginsDest = path.join(distAssets, 'plugins');
+				await safeCopy(tinymcePluginsSrc, tinymcePluginsDest);
+				const tinymceSkinsSrc = path.join(root, 'node_modules/tinymce/skins');
+				const tinymceSkinsDest = path.join(distAssets, 'skins');
+				await safeCopy(tinymceSkinsSrc, tinymceSkinsDest);
+				console.log('✅ Assets copy completed');
 			}
 		}
 	],
@@ -54,8 +73,6 @@ export default defineConfig({
 				'react/jsx-runtime',
 				'@zextras/carbonio-design-system',
 				'react-i18next',
-				'@emotion/styled',
-				'@emotion/react',
 				'i18next'
 			],
 			output: {
@@ -63,18 +80,35 @@ export default defineConfig({
 					react: 'React',
 					'react-dom': 'ReactDOM',
 					'react/jsx-runtime': 'jsxRuntime',
-					'@emotion/styled': 'styled',
-					'@emotion/react': 'emotionReact'
+					'@zextras/carbonio-design-system': 'CarbonioDesignSystem',
+					'react-i18next': 'reactI18next',
+					i18next: 'i18next'
 				},
-				// Preserve modules to avoid issues with external dependencies
+				compact: true, // Minify Rollup output
 				preserveModules: false,
-				// Ensure proper interop for default exports
-				interop: 'auto'
+				interop: 'auto',
+				exports: 'named'
 			}
 		},
-		sourcemap: true,
-		minify: false,
+		sourcemap: false, // Disable if not needed for debugging
+		minify: 'esbuild', // Use esbuild (faster & smaller)
 		target: 'es2020',
-		cssCodeSplit: false
+		cssCodeSplit: false,
+		chunkSizeWarningLimit: 600,
+		emptyOutDir: true
+	},
+	esbuild: {
+		drop: ['console', 'debugger'], // Remove console/debugger for smaller builds
+		treeShaking: true,
+		minifyIdentifiers: true,
+		minifyWhitespace: true
+	},
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, 'src')
+		}
+	},
+	define: {
+		'process.env.NODE_ENV': JSON.stringify('production')
 	}
 });

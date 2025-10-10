@@ -9,7 +9,7 @@ const baseConfig = require('./node_modules/@zextras/carbonio-ui-configs/rules/es
 
 module.exports = {
 	...baseConfig,
-	ignorePatterns: [...(baseConfig.ignorePatterns || []), 'src/assets/**', 'dist/**'],
+	ignorePatterns: [...(baseConfig?.ignorePatterns || []), 'src/assets/**', 'dist/**'],
 	plugins: [...baseConfig.plugins, 'notice'],
 	rules: {
 		...baseConfig.rules,
