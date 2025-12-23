@@ -192,6 +192,11 @@ export const Composer = ({
 				disabled={disabled}
 				{...rest}
 			/>
+			<style>{`
+				.tox.tox-tinymce {
+					width: 100%;
+				}
+			`}</style>
 		</Container>
 	);
 };
