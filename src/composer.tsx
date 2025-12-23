@@ -192,6 +192,7 @@ export const Composer = ({
 				disabled={disabled}
 				{...rest}
 			/>
+			{/* This style is needed to fix an issue where the toolbar covers the composer body and flickers in sticky mode. */}
 			<style>{`
 				.tox.tox-tinymce {
 					width: 100%;
