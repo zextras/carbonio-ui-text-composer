@@ -98,6 +98,17 @@ describe('Composer', () => {
 		});
 	});
 
+	it('injects custom styles for TinyMCE container', () => {
+		setupTest(<Composer />);
+		// eslint-disable-next-line testing-library/no-node-access
+		const styleElements = document.querySelectorAll('style');
+		const customStyle = Array.from(styleElements).find((el) =>
+			el.innerHTML.includes('.tox.tox-tinymce')
+		);
+		expect(customStyle).toBeInTheDocument();
+		expect(customStyle?.innerHTML).toContain('width: 100%');
+	});
+
 	it('disables editor when disabled prop is true', () => {
 		setupTest(<Composer disabled />);
 		const editor = screen.getByTestId(TINYMCE_EDITOR_TESTID);
