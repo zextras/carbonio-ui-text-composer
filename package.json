@@ -47,50 +47,52 @@
 		"build:watch": "vite build --watch",
 		"clean": "rimraf dist",
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
-		"lint:fix": "npm run lint -- --fix",
+		"lint:fix": "pnpm run lint -- --fix",
 		"prepare": "is-ci || husky",
-		"prepack": "npm run clean && npm run build",
+		"prepack": "pnpm run clean && pnpm run build",
 		"prettify": "prettier --write .",
 		"prettify:check": "prettier --check .",
-		"prettify:check:stagedFiles": "prettier --check $(git --no-pager diff --name-only --cached | tr '\\n' ' ')",
+		"prettify:check:stagedFiles": "prettier --check $(git --no-pager diff --name-only --cached --diff-filter=d | tr '\\n' ' ')",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest watch",
 		"type-check": "tsc --noEmit",
-		"validate": "npm run type-check && npm run lint && npm run test"
+		"validate": "pnpm run type-check && pnpm run lint && pnpm run test"
 	},
 	"dependencies": {
-		"@tinymce/tinymce-react": "^4.3.2",
-		"date-fns": "^4.1.0",
-		"tinymce": "^6.8.4"
+		"@tinymce/tinymce-react": "4.3.2",
+		"date-fns": "4.1.0",
+		"tinymce": "6.8.4"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^19.6.1",
-		"@commitlint/config-conventional": "^19.6.0",
-		"@testing-library/jest-dom": "^6.9.1",
-		"@testing-library/react": "^16.3.0",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/node": "^22.10.2",
-		"@types/react": "^18.3.7",
-		"@types/react-dom": "^18.3.5",
-		"@vitejs/plugin-react": "^5.0.4",
-		"@vitest/coverage-v8": "^3.1.1",
-		"@zextras/carbonio-design-system": "^12.0.1",
-		"@zextras/carbonio-ui-configs": "^2.1.0",
-		"babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-		"eslint-plugin-notice": "^1.0.0",
-		"husky": "^9.1.7",
-		"i18next": "^22.4.13",
-		"is-ci": "^4.1.0",
-		"jsdom": "^27.0.0",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-i18next": "^12.2.0",
-		"sonar-scanner": "^3.1.0",
-		"typescript": "^5.9.3",
-		"vite": "^7.1.9",
-		"vite-plugin-dts": "^4.3.0",
-		"vitest": "^3.2.4"
+		"@commitlint/cli": "19.6.1",
+		"@commitlint/config-conventional": "19.6.0",
+		"@testing-library/jest-dom": "6.9.1",
+		"@testing-library/react": "16.3.0",
+		"@testing-library/user-event": "14.5.2",
+		"@types/node": "22.12.0",
+		"@types/react": "18.3.7",
+		"@types/react-dom": "18.3.5",
+		"@vitejs/plugin-react": "5.0.4",
+		"@vitest/coverage-v8": "3.2.4",
+		"@zextras/carbonio-design-system": "12.0.1",
+		"@zextras/carbonio-ui-configs": "2.1.0",
+		"babel-plugin-transform-react-remove-prop-types": "0.4.24",
+		"eslint": "^8.57.1",
+		"eslint-plugin-notice": "1.0.0",
+		"husky": "9.1.7",
+		"i18next": "22.4.13",
+		"is-ci": "4.1.0",
+		"jsdom": "27.0.0",
+		"prettier": "^3.8.1",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"react-i18next": "12.2.0",
+		"sonarqube-scanner": "^4.3.5",
+		"typescript": "5.9.3",
+		"vite": "7.1.9",
+		"vite-plugin-dts": "4.3.0",
+		"vitest": "3.2.4"
 	},
 	"peerDependencies": {
 		"@zextras/carbonio-design-system": "^12.0.1",
@@ -100,13 +102,19 @@
 	},
 	"engines": {
 		"node": "v22",
-		"npm": "v10"
+		"pnpm": ">=10"
 	},
+	"packageManager": "pnpm@10.32.1",
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org/"
 	},
 	"sideEffects": [
 		"*.css"
-	]
+	],
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
+	}
 }
