@@ -139,7 +139,6 @@ pipeline {
             steps {
                 container('pnpm') {
                     withSonarQubeEnv(credentialsId: 'sonarqube-user-token', installationName: 'SonarQube instance') {
-                        sh 'pnpm rebuild sonar-scanner'
                         sh "pnpm exec sonar-scanner -Dsonar.projectKey=${getPackageName().replaceAll("@zextras/", "")} -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
                     }
                 }
