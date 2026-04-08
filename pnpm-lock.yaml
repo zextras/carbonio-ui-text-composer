@@ -57,6 +57,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: 0.4.24
         version: 0.4.24
+      eslint:
+        specifier: ^8.57.1
+        version: 8.57.1
       eslint-plugin-notice:
         specifier: 1.0.0
         version: 1.0.0(eslint@8.57.1)
@@ -72,6 +75,9 @@ importers:
       jsdom:
         specifier: 27.0.0
         version: 27.0.0
+      prettier:
+        specifier: ^3.8.1
+        version: 3.8.1
       react:
         specifier: 18.3.1
         version: 18.3.1
