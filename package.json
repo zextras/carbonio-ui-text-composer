@@ -111,5 +111,11 @@
 	},
 	"sideEffects": [
 		"*.css"
-	]
+	],
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"sonar-scanner"
+		]
+	}
 }
