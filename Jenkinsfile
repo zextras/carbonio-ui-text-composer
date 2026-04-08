@@ -8,18 +8,6 @@ def getPackageName() {
     return sh(script: 'grep \'"name":\' package.json | sed -n --regexp-extended \'s/.*"name": "([^"]+).*/\\1/p\' ', returnStdout: true).trim()
 }
 
-def getRepositoryName() {
-    return sh(script: '''
-        git remote -v | head -n1 | cut -d$'\t' -f2 | cut -d' ' -f1 | sed -e 's!https://github.com/!!g' -e 's!git@github.com:!!g' -e 's!.git!!g'
-    ''', returnStdout: true).trim()
-}
-
-def getLastTag() {
-    return sh(script: '''
-        git describe --tags --abbrev=0
-    ''', returnStdout: true).trim()
-}
-
 def getNodeVersion() {
     return sh(
         script: 'sed "s/^[vV]//" .nvmrc | cut -d. -f1',
@@ -27,22 +15,11 @@ def getNodeVersion() {
     ).trim()
 }
 
-void npmLogin(String npmAuthToken) {
-    if (!fileExists(file: '.npmrc')) {
-        sh(
-            script: """
-                echo "//registry.npmjs.org/:_authToken=${npmAuthToken}" >> .npmrc
-            """,
-            returnStdout: false
-        )
-    }
-}
-
+// FLAGS
 Boolean isReleaseBranch
 Boolean isDevelBranch
 Boolean isPullRequest
 Boolean isSonarQubeEnabled
-String branchName
 String nodeVersion
 
 pipeline {
@@ -58,6 +35,25 @@ pipeline {
     parameters {
         booleanParam defaultValue: true, description: 'Enable SonarQube Stage', name: 'RUN_SONARQUBE'
     }
+    post {
+        always {
+            container('base') {
+                script {
+                    def commitEmail = sh(
+                        script: "git --no-pager show -s --format='%ae'",
+                        returnStdout: true
+                    ).trim()
+                    emailext(
+                        attachLog: true,
+                        body: "\$DEFAULT_CONTENT",
+                        recipientProviders: [requestor()],
+                        subject: "\$DEFAULT_SUBJECT",
+                        to: "${commitEmail}"
+                    )
+                }
+            }
+        }
+    }
     stages {
         stage("Read settings") {
             steps {
@@ -70,29 +66,16 @@ pipeline {
                     echo "isPullRequest: ${isPullRequest}"
                     isSonarQubeEnabled = params.RUN_SONARQUBE == true
                     echo "isSonarQubeEnabled: ${isSonarQubeEnabled}"
-                    branchName = env.CHANGE_BRANCH
-                    echo "branchName: ${branchName}"
                     nodeVersion = getNodeVersion()
                     echo "NodeJS Major Version: $nodeVersion"
-                }
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: "npm-zextras-bot-auth-token",
-                        usernameVariable: "NPM_USERNAME",
-                        passwordVariable: "NPM_PASSWORD"
-                    )
-                ]) {
-                    script {
-                        npmLogin(NPM_PASSWORD)
-                    }
                 }
             }
         }
         stage('Install dependencies') {
             steps {
-                container('nodejs-' + nodeVersion) {
+                container('pnpm') {
                     script {
-                        sh 'npm ci'
+                        sh 'pnpm install --frozen-lockfile'
                     }
                 }
             }
@@ -108,29 +91,33 @@ pipeline {
             parallel {
                 stage('Prettify') {
                     steps {
-                        container('nodejs-' + nodeVersion) {
-                            sh 'npm run prettify:check'
+                        container('pnpm') {
+                            sh 'pnpm run prettify:check'
                         }
                     }
                 }
                 stage('Lint') {
                     steps {
-                        container('nodejs-' + nodeVersion) {
-                            sh 'npm run lint'
+                        container('pnpm') {
+                            sh 'pnpm run lint'
                         }
                     }
                 }
                 stage('TypeCheck') {
                     steps {
-                        container('nodejs-' + nodeVersion) {
-                            sh 'npm run type-check'
+                        container('pnpm') {
+                            script {
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                    sh 'pnpm run type-check'
+                                }
+                            }
                         }
                     }
                 }
                 stage('Unit Tests') {
                     steps {
-                        container('nodejs-' + nodeVersion) {
-                            sh 'npm run test'
+                        container('pnpm') {
+                            sh 'pnpm run test'
                         }
                     }
                     post {
@@ -150,7 +137,7 @@ pipeline {
                 }
             }
             steps {
-                container('nodejs-' + nodeVersion) {
+                container('pnpm') {
                     withSonarQubeEnv(credentialsId: 'sonarqube-user-token', installationName: 'SonarQube instance') {
                         sh "npx sonar-scanner -Dsonar.projectKey=${getPackageName().replaceAll("@zextras/", "")} -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
                     }
@@ -160,9 +147,9 @@ pipeline {
 
         stage("Build") {
             steps {
-                container('nodejs-' + nodeVersion) {
+                container('pnpm') {
                     script {
-                        sh 'npm run build'
+                        sh 'pnpm run build'
                     }
                 }
             }
@@ -179,29 +166,12 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'npm-zextras-bot-auth-token', usernameVariable: 'AUTH_USERNAME', passwordVariable: 'NPM_TOKEN')]) {
                             withCredentials([usernamePassword(credentialsId: 'jenkins-integration-with-github-account', usernameVariable: 'GH_USERNAME', passwordVariable: 'GH_TOKEN')]) {
-                                sh "npx semantic-release"
+                                sh 'corepack enable && npx semantic-release'
                             }
                         }
                     }
                 }
             }
-        }
-    }
-    post {
-        always {
-            script {
-                commitEmail = sh(
-                    script: 'git --no-pager show -s --format=\'%ae\'',
-                    returnStdout: true
-                ).trim()
-            }
-            emailext (
-                attachLog: true,
-                body: '$DEFAULT_CONTENT',
-                recipientProviders: [requestor()],
-                subject: '$DEFAULT_SUBJECT',
-                to: "${commitEmail}"
-            )
         }
     }
 }

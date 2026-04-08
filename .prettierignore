@@ -23,3 +23,5 @@ README.md
 .prettierignore
 *.toml
 Jenkinsfile
+pnpm-lock.yaml
+package-lock.json
