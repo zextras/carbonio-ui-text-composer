@@ -55,6 +55,15 @@ pipeline {
         }
     }
     stages {
+        stage('Licenses checks') {
+            steps {
+                container('reuse') {
+                    script {
+                        sh 'reuse lint'
+                    }
+                }
+            }
+        }
         stage("Read settings") {
             steps {
                 script {
@@ -92,14 +101,22 @@ pipeline {
                 stage('Prettify') {
                     steps {
                         container('pnpm') {
-                            sh 'pnpm run prettify:check'
+                            script {
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                    sh 'pnpm run prettify:check'
+                                }
+                            }
                         }
                     }
                 }
                 stage('Lint') {
                     steps {
                         container('pnpm') {
-                            sh 'pnpm run lint'
+                            script {
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                    sh 'pnpm run lint'
+                                }
+                            }
                         }
                     }
                 }
@@ -117,13 +134,20 @@ pipeline {
                 stage('Unit Tests') {
                     steps {
                         container('pnpm') {
-                            sh 'pnpm run test'
+                            script {
+                                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                    sh 'pnpm run test'
+                                }
+                            }
                         }
                     }
                     post {
                         always {
-                            junit 'junit.xml'
-                            recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'coverage/cobertura-coverage.xml']])
+                            junit(allowEmptyResults: true, testResults: 'junit.xml')
+                            recordCoverage(
+                                tools: [[parser: 'COBERTURA', pattern: 'coverage/cobertura-coverage.xml']],
+                                sourceCodeRetention: 'NEVER'
+                            )
                         }
                     }
                 }
@@ -162,11 +186,11 @@ pipeline {
                 }
             }
             steps {
-                container('nodejs-' + nodeVersion) {
+                container('pnpm') {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'npm-zextras-bot-auth-token', usernameVariable: 'AUTH_USERNAME', passwordVariable: 'NPM_TOKEN')]) {
                             withCredentials([usernamePassword(credentialsId: 'jenkins-integration-with-github-account', usernameVariable: 'GH_USERNAME', passwordVariable: 'GH_TOKEN')]) {
-                                sh 'corepack enable && pnpm exec semantic-release'
+                                sh 'pnpm exec semantic-release'
                             }
                         }
                     }
