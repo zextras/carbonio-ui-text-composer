@@ -16,7 +16,6 @@ def getNodeVersion() {
 }
 
 // FLAGS
-// FLAGS
 Boolean isReleaseBranch
 Boolean isDevelBranch
 Boolean isPullRequest
@@ -35,25 +34,6 @@ pipeline {
     }
     parameters {
         booleanParam defaultValue: true, description: 'Enable SonarQube Stage', name: 'RUN_SONARQUBE'
-    }
-    post {
-        always {
-            container('base') {
-                script {
-                    def commitEmail = sh(
-                        script: "git --no-pager show -s --format='%ae'",
-                        returnStdout: true
-                    ).trim()
-                    emailext(
-                        attachLog: true,
-                        body: "\$DEFAULT_CONTENT",
-                        recipientProviders: [requestor()],
-                        subject: "\$DEFAULT_SUBJECT",
-                        to: "${commitEmail}"
-                    )
-                }
-            }
-        }
     }
     post {
         always {
@@ -94,9 +74,7 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 container('pnpm') {
-                container('pnpm') {
                     script {
-                        sh 'pnpm install --frozen-lockfile'
                         sh 'pnpm install --frozen-lockfile'
                     }
                 }
@@ -115,15 +93,11 @@ pipeline {
                     steps {
                         container('pnpm') {
                             sh 'pnpm run prettify:check'
-                        container('pnpm') {
-                            sh 'pnpm run prettify:check'
                         }
                     }
                 }
                 stage('Lint') {
                     steps {
-                        container('pnpm') {
-                            sh 'pnpm run lint'
                         container('pnpm') {
                             sh 'pnpm run lint'
                         }
@@ -137,19 +111,11 @@ pipeline {
                                     sh 'pnpm run type-check'
                                 }
                             }
-                        container('pnpm') {
-                            script {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                                    sh 'pnpm run type-check'
-                                }
-                            }
                         }
                     }
                 }
                 stage('Unit Tests') {
                     steps {
-                        container('pnpm') {
-                            sh 'pnpm run test'
                         container('pnpm') {
                             sh 'pnpm run test'
                         }
@@ -172,9 +138,7 @@ pipeline {
             }
             steps {
                 container('pnpm') {
-                container('pnpm') {
                     withSonarQubeEnv(credentialsId: 'sonarqube-user-token', installationName: 'SonarQube instance') {
-                        sh "pnpm exec sonar-scanner -Dsonar.projectKey=${getPackageName().replaceAll("@zextras/", "")} -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
                         sh "pnpm exec sonar-scanner -Dsonar.projectKey=${getPackageName().replaceAll("@zextras/", "")} -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
                     }
                 }
@@ -184,9 +148,7 @@ pipeline {
         stage("Build") {
             steps {
                 container('pnpm') {
-                container('pnpm') {
                     script {
-                        sh 'pnpm run build'
                         sh 'pnpm run build'
                     }
                 }
