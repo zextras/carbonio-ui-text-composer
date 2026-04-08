@@ -79,6 +79,7 @@
 		"@zextras/carbonio-ui-configs": "2.1.0",
 		"babel-plugin-transform-react-remove-prop-types": "0.4.24",
 		"conventional-changelog-conventionalcommits": "^9.3.1",
+		"conventional-changelog-conventionalcommits": "^9.3.1",
 		"eslint": "^8.57.1",
 		"eslint-plugin-notice": "1.0.0",
 		"husky": "9.1.7",
