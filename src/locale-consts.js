@@ -5,13 +5,6 @@
  */
 
 export const STATIC_LOCALES = {
-	zh_CN: {
-		name: '中文 (中国)',
-		value: 'zh_CN',
-		tinymceLocale: 'zh-Hans',
-		labelKey: 'locale.label_chinese',
-		labelDefaultValue: 'Chinese (China) - {{value}}'
-	},
 	nl: {
 		name: 'Nederlands',
 		value: 'nl',
@@ -46,6 +39,13 @@ export const STATIC_LOCALES = {
 		tinymceLocale: 'hu_HU',
 		labelKey: 'locale.label_hungarian',
 		labelDefaultValue: 'Hungarian - {{value}}'
+	},
+	id: {
+		name: 'Bahasa Indonesia',
+		value: 'id',
+		tinymceLocale: 'id',
+		labelKey: 'locale.label_indonesian',
+		labelDefaultValue: 'Indonesian - {{value}}'
 	},
 	it: {
 		name: 'italiano',

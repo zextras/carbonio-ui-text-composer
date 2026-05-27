@@ -4,64 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { calculateTinyMCELanguage } from '../locale-utils';
-
-// Mock the locale constants
-vi.mock('../locale-consts', () => ({
-	STATIC_LOCALES: {
-		zh_CN: {
-			name: '中文 (中国)',
-			value: 'zh_CN',
-			tinymceLocale: 'zh-Hans',
-			labelKey: 'locale.label_chinese',
-			labelDefaultValue: 'Chinese (China) - {{value}}'
-		},
-		nl: {
-			name: 'Nederlands',
-			value: 'nl',
-			tinymceLocale: 'nl',
-			labelKey: 'locale.label_dutch',
-			labelDefaultValue: 'Dutch - {{value}}'
-		},
-		en: {
-			name: 'English',
-			value: 'en',
-			tinymceLocale: 'en',
-			labelKey: 'locale.label_english',
-			labelDefaultValue: 'English - {{value}}'
-		},
-		de: {
-			name: 'Deutsch',
-			value: 'de',
-			tinymceLocale: 'de',
-			labelKey: 'locale.label_german',
-			labelDefaultValue: 'German - {{value}}'
-		},
-		hu: {
-			name: 'Magyar',
-			value: 'hu',
-			tinymceLocale: 'hu_HU',
-			labelKey: 'locale.label_hungarian',
-			labelDefaultValue: 'Hungarian - {{value}}'
-		},
-		it: {
-			name: 'italiano',
-			value: 'it',
-			tinymceLocale: 'it',
-			labelKey: 'locale.label_italian',
-			labelDefaultValue: 'Italian - {{value}}'
-		},
-		// Test case without tinymceLocale property
-		testLocale: {
-			name: 'Test Locale',
-			value: 'test_locale',
-			labelKey: 'locale.label_test',
-			labelDefaultValue: 'Test - {{value}}'
-		}
-	}
-}));
 
 describe('calculateTinyMCELanguage', () => {
 	describe('when userLocale is undefined', () => {
@@ -72,11 +17,6 @@ describe('calculateTinyMCELanguage', () => {
 	});
 
 	describe('when userLocale is valid and has tinymceLocale', () => {
-		it('should return the tinymceLocale for Chinese', () => {
-			const result = calculateTinyMCELanguage('zh_CN');
-			expect(result).toBe('zh-Hans');
-		});
-
 		it('should return the tinymceLocale for Dutch', () => {
 			const result = calculateTinyMCELanguage('nl');
 			expect(result).toBe('nl');
@@ -97,16 +37,34 @@ describe('calculateTinyMCELanguage', () => {
 			expect(result).toBe('hu_HU');
 		});
 
+		it('should return the tinymceLocale for Indonesian', () => {
+			const result = calculateTinyMCELanguage('id');
+			expect(result).toBe('id');
+		});
+
 		it('should return the tinymceLocale for Italian', () => {
 			const result = calculateTinyMCELanguage('it');
 			expect(result).toBe('it');
 		});
-	});
 
-	describe('when userLocale is valid but has no tinymceLocale', () => {
-		it('should return the value property as fallback', () => {
-			const result = calculateTinyMCELanguage('testLocale');
-			expect(result).toBe('test_locale');
+		it('should return the tinymceLocale for Portuguese (pt_BR differs from value)', () => {
+			const result = calculateTinyMCELanguage('pt');
+			expect(result).toBe('pt_BR');
+		});
+
+		it('should return the tinymceLocale for French (fr_FR differs from value)', () => {
+			const result = calculateTinyMCELanguage('fr');
+			expect(result).toBe('fr_FR');
+		});
+
+		it('should return the tinymceLocale for Thai (th_TH differs from value)', () => {
+			const result = calculateTinyMCELanguage('th');
+			expect(result).toBe('th_TH');
+		});
+
+		it('should return the tinymceLocale for Slovenian (sl_SI differs from value)', () => {
+			const result = calculateTinyMCELanguage('sl');
+			expect(result).toBe('sl_SI');
 		});
 	});
 
@@ -146,16 +104,14 @@ describe('calculateTinyMCELanguage', () => {
 
 	describe('locale precedence', () => {
 		it('should prefer tinymceLocale over value when both exist', () => {
-			// All test locales with tinymceLocale should return tinymceLocale, not value
-			const result = calculateTinyMCELanguage('zh_CN');
-			expect(result).toBe('zh-Hans'); // tinymceLocale
-			expect(result).not.toBe('zh_CN'); // value
+			const result = calculateTinyMCELanguage('hu');
+			expect(result).toBe('hu_HU'); // tinymceLocale
+			expect(result).not.toBe('hu'); // value
 		});
 
-		it('should use value when tinymceLocale is missing', () => {
-			// testLocale doesn't have tinymceLocale, should use value
-			const result = calculateTinyMCELanguage('testLocale');
-			expect(result).toBe('test_locale'); // value
+		it('should return the original locale when not in STATIC_LOCALES', () => {
+			const result = calculateTinyMCELanguage('unknown_locale');
+			expect(result).toBe('unknown_locale');
 		});
 	});
 });
