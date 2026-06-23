@@ -93,7 +93,7 @@
 		"semantic-release": "^25.0.5",
 		"sonarqube-scanner": "^4.3.8",
 		"typescript": "5.9.3",
-		"vite": "7.1.9",
+		"vite": "7.3.5",
 		"vite-plugin-dts": "4.5.4",
 		"vitest": "3.2.4"
 	},
