@@ -75,7 +75,7 @@
 		"@types/react-dom": "18.3.7",
 		"@vitejs/plugin-react": "5.2.0",
 		"@vitest/coverage-v8": "3.2.6",
-		"@zextras/carbonio-design-system": "12.0.1",
+		"@zextras/carbonio-design-system": "12.0.4",
 		"@zextras/carbonio-ui-configs": "2.1.0",
 		"babel-plugin-transform-react-remove-prop-types": "0.4.24",
 		"conventional-changelog-conventionalcommits": "^9.3.1",
@@ -98,7 +98,7 @@
 		"vitest": "3.2.4"
 	},
 	"peerDependencies": {
-		"@zextras/carbonio-design-system": "^12.0.1",
+		"@zextras/carbonio-design-system": "^12.0.4",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-i18next": "^12.0.0"
