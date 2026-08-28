@@ -30,6 +30,8 @@ Boolean isPullRequest
 Boolean isSonarQubeEnabled
 String nodeVersion
 
+properties(defaultPipelineProperties())
+
 pipeline {
     agent {
         node {
