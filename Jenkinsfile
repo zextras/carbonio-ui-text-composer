@@ -93,7 +93,7 @@ pipeline {
         }
         stage('Install dependencies') {
             steps {
-                container('pnpm') {
+                container('pnpm-' + nodeVersion) {
                     script {
                         sh 'pnpm install --frozen-lockfile'
                     }
@@ -111,7 +111,7 @@ pipeline {
             parallel {
                 stage('Prettify') {
                     steps {
-                        container('pnpm') {
+                        container('pnpm-' + nodeVersion) {
                             script {
                                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                     sh 'pnpm run prettify:check'
@@ -122,7 +122,7 @@ pipeline {
                 }
                 stage('Lint') {
                     steps {
-                        container('pnpm') {
+                        container('pnpm-' + nodeVersion) {
                             script {
                                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                     sh 'pnpm run lint'
@@ -133,7 +133,7 @@ pipeline {
                 }
                 stage('TypeCheck') {
                     steps {
-                        container('pnpm') {
+                        container('pnpm-' + nodeVersion) {
                             script {
                                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                     sh 'pnpm run type-check'
@@ -144,7 +144,7 @@ pipeline {
                 }
                 stage('Unit Tests') {
                     steps {
-                        container('pnpm') {
+                        container('pnpm-' + nodeVersion) {
                             script {
                                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                     sh 'pnpm run test'
@@ -172,7 +172,7 @@ pipeline {
                 }
             }
             steps {
-                container('pnpm') {
+                container('pnpm-' + nodeVersion) {
                     withSonarQubeEnv(credentialsId: 'sonarqube-user-token', installationName: 'SonarQube instance') {
                         sh "pnpm exec sonar-scanner -Dsonar.projectKey=${getPackageName().replaceAll("@zextras/", "")} -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
                     }
@@ -182,7 +182,7 @@ pipeline {
 
         stage("Build") {
             steps {
-                container('pnpm') {
+                container('pnpm-' + nodeVersion) {
                     script {
                         sh 'pnpm run build'
                     }
@@ -197,7 +197,7 @@ pipeline {
                 }
             }
             steps {
-                container('pnpm') {
+                container('pnpm-' + nodeVersion) {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'npm-zextras-bot-auth-token', usernameVariable: 'AUTH_USERNAME', passwordVariable: 'NPM_TOKEN')]) {
                             withCredentials([usernamePassword(credentialsId: 'jenkins-integration-with-github-account', usernameVariable: 'GH_USERNAME', passwordVariable: 'GH_TOKEN')]) {
