@@ -15,8 +15,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       tinymce:
-        specifier: 6.8.4
-        version: 6.8.4
+        specifier: 7.9.3
+        version: 7.9.3
     devDependencies:
       '@commitlint/cli':
         specifier: 19.8.1
@@ -4176,6 +4176,9 @@ packages:
 
   tinymce@6.8.4:
     resolution: {integrity: sha512-okoJyxuPv1gzASxQDNgQbnUXOdAIyoOSXcXcZZu7tiW0PSKEdf3SdASxPBupRj+64/E3elHwVRnzSdo82Emqbg==}
+
+  tinymce@7.9.3:
+    resolution: {integrity: sha512-Mtm54U5YJ6Pyo/GaAx+JSHXTGEuxrg2AowVWCD9zy1eBolp5Ub7S1rTtsyQdxhPegfhLuR3VLiTKGw1tacv09g==}
 
   tinypool@1.1.1:
     resolution: {integrity: sha512-Zba82s87IFq9A9XmjiX5uZA/ARWDrB03OHlq+Vw1fSdt0I+4/Kutwy8BP4Y/y/aORMo61FQ0vIb5j44vSo5Pkg==}
@@ -8984,6 +8987,8 @@ snapshots:
       picomatch: 4.0.4
 
   tinymce@6.8.4: {}
+
+  tinymce@7.9.3: {}
 
   tinypool@1.1.1: {}
 

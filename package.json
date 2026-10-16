@@ -62,7 +62,7 @@
 	"dependencies": {
 		"@tinymce/tinymce-react": "4.3.2",
 		"date-fns": "4.1.0",
-		"tinymce": "6.8.4"
+		"tinymce": "7.9.3"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "19.8.1",
