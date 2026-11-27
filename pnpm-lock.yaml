@@ -79,7 +79,7 @@ importers:
         specifier: 27.4.0
         version: 27.4.0
       prettier:
-        specifier: ^3.9.10
+        specifier: ^3.10.1
         version: 3.10.1
       react:
         specifier: 18.3.1
